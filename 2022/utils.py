@@ -33,6 +33,11 @@ def printInfo():
 
 # input utils
 
+
+def fileToLString(filePath):
+    return open(filePath, 'r').read()
+
+
 def fileToLines(filePath):
     return open(filePath, 'r').read().splitlines()
 
