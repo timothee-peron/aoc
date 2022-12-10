@@ -1,10 +1,8 @@
-import os
+import utils
 
-inputFileDir = os.path.dirname(__file__)
-inputFileName = "sample.txt"
-inputFileName = "input.txt"
-
-inputFileFullDir = os.path.join(inputFileDir, inputFileName)
+utils.DEBUG = True
+utils.DEBUG = False
+inputFileFullDir = utils.inputFilePath()
 
 
 def readInputFile(filePath):
@@ -103,7 +101,7 @@ def printMatrix(m):
     print('')
 
 
-inputLines = readInputFile(inputFileName)
+inputLines = readInputFile(inputFileFullDir)
 matrix = convertToMatrix(inputLines)
 
 ctn = 0

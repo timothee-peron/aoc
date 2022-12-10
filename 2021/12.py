@@ -1,18 +1,16 @@
-import os
 from collections import defaultdict
+import utils
 
-inputFileDir = os.path.dirname(__file__)
-inputFileName = "sample.txt"
-inputFileName = "input.txt"
-
-inputFileFullDir = os.path.join(inputFileDir, inputFileName)
+utils.DEBUG = True
+utils.DEBUG = False
+inputFileFullDir = utils.inputFilePath()
 
 
 def readInputFile(filePath):
     return open(filePath, 'r').read().splitlines()
 
 
-inputlines = readInputFile(inputFileName)
+inputlines = readInputFile(inputFileFullDir)
 edges = frozenset([frozenset(x.split('-')) for x in inputlines])
 nodes = set([x.split('-')[0] for x in inputlines]).union(set([x.split('-')[1] for x in inputlines]))
 

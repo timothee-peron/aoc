@@ -1,10 +1,8 @@
-import os
+import utils
 
-inputFileDir = os.path.dirname(__file__)
-inputFileName = "01.txt"
-inputFileName = "01.txt"
-
-inputFileFullDir = os.path.join(inputFileDir, inputFileName)
+utils.DEBUG = True
+utils.DEBUG = False
+inputFileFullDir = utils.inputFilePath()
 
 
 def readInputFile(filePath):
@@ -78,7 +76,7 @@ for _line in _input:
     score = 0
     result.reverse()
     for cls in result:
-        score = score*5 + pointsMap[cls]
+        score = score * 5 + pointsMap[cls]
     scores.append(score)
 scores.sort()
-print(scores[(len(scores) - 1)//2])
+print(scores[(len(scores) - 1) // 2])

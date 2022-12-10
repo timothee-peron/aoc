@@ -1,19 +1,19 @@
-import os
 from collections import Counter
 from collections import defaultdict
 
-inputFileDir = os.path.dirname(__file__)
-inputFileName = "sample.txt"
-inputFileName = "input.txt"
+import numpy as np
+import utils
 
-inputFileFullDir = os.path.join(inputFileDir, inputFileName)
+utils.DEBUG = True
+utils.DEBUG = False
+inputFileFullDir = utils.inputFilePath()
 
 
 def readInputFile(filePath):
     return open(filePath, 'r').read()
 
 
-_file = readInputFile(inputFileName).split('\n\n')
+_file = readInputFile(inputFileFullDir).split('\n\n')
 
 template = list(_file[0])
 instructions = _file[1].split('\n')

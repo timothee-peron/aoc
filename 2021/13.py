@@ -1,19 +1,16 @@
-import os
 import numpy as np
-from collections import defaultdict
+import utils
 
-inputFileDir = os.path.dirname(__file__)
-inputFileName = "sample.txt"
-inputFileName = "input.txt"
-
-inputFileFullDir = os.path.join(inputFileDir, inputFileName)
+utils.DEBUG = True
+utils.DEBUG = False
+inputFileFullDir = utils.inputFilePath()
 
 
 def readInputFile(filePath):
     return open(filePath, 'r').read()
 
 
-_file = readInputFile(inputFileName).split('\n\n')
+_file = readInputFile(inputFileFullDir).split('\n\n')
 dots = [list(map(lambda x: int(x), i.split(','))) for i in _file[0].split('\n')]
 instructions = [(i.split(' ')[2].split('=')[0], int(i.split(' ')[2].split('=')[1])) for i in _file[1].split('\n')]
 
