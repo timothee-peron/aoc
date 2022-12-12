@@ -78,3 +78,25 @@ def digitsInString(text):
 
 def groupListByN(_list, n):
     return list(zip(*(iter(_list),) * n))
+
+
+# "FFA01" > [ 1 0 0 1 0 ]
+def hexToBits(hexString):
+    bits = []
+    for _h in list(hexString):
+        num = int(_h, 16)
+        _bin = [int(i) for i in format(num, "b")]
+        while len(_bin) < 4:
+            _bin.insert(0, 0)
+        for bit in _bin:
+            bits.append(bit)
+    return bits
+
+
+# [ 1 0 0 1 0 ] > 4513
+def bitsToNum(bitsArray):
+    value = 0
+    for bit in bitsArray:
+        value = value << 1
+        value += bit
+    return value
