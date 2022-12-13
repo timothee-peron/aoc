@@ -61,7 +61,6 @@ print("part1")
 print(s)
 
 # part2
-
 allLines = list(filter(lambda x: x != "", wholeFile.split("\n")))
 allLines.append("[[2]]")
 allLines.append("[[6]]")
