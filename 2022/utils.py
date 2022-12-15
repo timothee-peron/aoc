@@ -73,7 +73,7 @@ def digitsInString(text):
     pattern = r"-?\d+"
     compiledRe = re.compile(pattern)
     results = compiledRe.findall(text)
-    return results
+    return list(map(int, results))
 
 
 def groupListByN(_list, n):
