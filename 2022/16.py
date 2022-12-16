@@ -12,7 +12,8 @@ utils.printInfo()
 inputLines = utils.fileToLines(utils.inputFilePath())
 
 
-def parseInput(inputLines):
+# backup
+def _parseInput(inputLines):
     data = []
     for line in inputLines:
         words = line.split(' ')
@@ -22,6 +23,29 @@ def parseInput(inputLines):
         otherValves = tuple(map(lambda other: other.split(',')[0], words[9:]))
         data.append((valve, flow, otherValves))
     return data
+
+
+def parseInput(inputLines):
+    data = []
+    valvesDict = {}
+
+    # str -> int
+    def getValve(name):
+        if name in valvesDict.keys():
+            return valvesDict[name]
+        valvesDict[name] = len(valvesDict)
+        return valvesDict[name]
+
+    for line in inputLines:
+        words = line.split(' ')
+        valve = getValve(words[1])
+        flow = words[4].split('=')[1].split(';')[0]
+        flow = int(flow)
+        otherValves = list(map(lambda other: other.split(',')[0], words[9:]))
+        otherValves = tuple(map(getValve, otherValves))
+        data.append((valve, flow, otherValves))
+
+    return data, valvesDict
 
 
 def dataToGraph(inputData):
@@ -69,12 +93,12 @@ def bfss(inputData):
 
 
 # part 1
-inputData = parseInput(inputLines)
+inputData, valveDict = parseInput(inputLines)
 distances = bfss(inputData)
 pressures = dataToPressures(inputData)
 
 # minute (max 30 inc), pressure, pos, opened valves
-paths = [[1, 0, 'AA', set()]]
+paths = [[1, 0, valveDict['AA'], set()]]
 validPressures = {0}
 while len(paths) > 0:
     newPaths = []
@@ -102,19 +126,19 @@ print("PART1")
 print(max(validPressures))
 
 # part 1
-inputData = parseInput(inputLines)
+inputData, valveDict = parseInput(inputLines)
 distances = bfss(inputData)
 pressures = dataToPressures(inputData)
 
 # minute (max 26 inc), timeElephant, pressure, pos, posElephant, opened valves
-paths = [[1, 1, 0, 'AA', 'AA', set()]]
+paths = [[1, 1, 0, valveDict['AA'], valveDict['AA'], set()]]
+visitedStates = set()
 validPressures = {0}
 while len(paths) > 0:
     newPaths = []
     for path in paths:
         time, time2, pressure, pos, posElephant, visited = path
-        if time > 26 or time2 > 26:
-            continue
+        visitedStates.add((time, time2, pressure, pos, posElephant, frozenset(visited)))
         validPressures.add(pressure)
 
         # move and open
@@ -125,12 +149,17 @@ while len(paths) > 0:
                 flow = pressures[destination]
                 if flow == 0:
                     continue
+                newTime = time + d + 1
+                if newTime > 26:
+                    continue
                 remainingTime = 26 - time - d
                 valvePressure = flow * remainingTime
                 newVisited = visited.copy()
                 newVisited.add(destination)
-                np = [time + d + 1, time2, pressure + valvePressure, destination, posElephant, newVisited]
-                newPaths.append(np)
+                p2 = pressure + valvePressure
+                np = [newTime, time2, p2, destination, posElephant, newVisited]
+                if (newTime, time2, p2, destination, posElephant, frozenset(newVisited)) not in visited:
+                    newPaths.append(np)
 
         if time2 <= 26:
             for destination, d in distances[posElephant].items():
@@ -139,12 +168,17 @@ while len(paths) > 0:
                 flow = pressures[destination]
                 if flow == 0:
                     continue
+                newTime = time2 + d + 1
+                if newTime > 26:
+                    continue
                 remainingTime = 26 - time2 - d
                 valvePressure = flow * remainingTime
                 newVisited = visited.copy()
                 newVisited.add(destination)
-                np = [time, time2 + d + 1, pressure + valvePressure, pos, destination, newVisited]
-                newPaths.append(np)
+                p2 = pressure + valvePressure
+                np = [time, newTime, pressure + valvePressure, pos, destination, newVisited]
+                if (time, newTime, pressure + valvePressure, pos, destination, frozenset(newVisited)) not in visited:
+                    newPaths.append(np)
 
     paths = newPaths
 print("PART2")
