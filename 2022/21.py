@@ -17,6 +17,10 @@ for line in lines:
     if word not in variables.keys():
       variables[word] = z3.Int(word)
 
+  if "/" in line:
+    # A : B / C <==> A * C : B
+    line = f"{words[0]} * {words[2]} : {words[1]}"
+
   for word in words:
     line = line.replace(word, f"variables['{word}']")
 
@@ -30,8 +34,6 @@ resultModel = s.model()
 
 print('PART1')
 print(resultModel.eval(z3.Int("root")))
-
-
 
 s = z3.Solver()
 variables = {}
@@ -50,21 +52,17 @@ for line in lines:
     if word not in variables.keys():
       variables[word] = z3.Int(word)
 
+  # / does not behave well with big integers
+  if "/" in line:
+    # A : B / C <==> A * C : B
+    line = f"{words[0]} * {words[2]} : {words[1]}"
+
   for word in words:
     line = line.replace(word, f"variables['{word}']")
 
   line = line.replace(':', ' ==')
 
-  # print(line)
   s.add(eval(line))
-
-for k, v in variables.items():
-  s.add(v > 0)
-
-# because I had 2 solutions?!
-s.add(variables['humn'] < 3876907167496)
-# s.add(variables['humn'] < 3876907167495)
-
 
 result = s.check()
 resultModel = s.model()
