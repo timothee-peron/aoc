@@ -1,0 +1,7 @@
+{
+  "pylint.cwd": "${fileDirname}",
+  "python.terminal.executeInFileDir": true,
+  "pylint.args": [
+    "--disable=C0114,C0103"
+  ]
+}
