@@ -1,1 +1,1 @@
-disable=C0114, C0103
+disable=C0114, C0103, C0411
