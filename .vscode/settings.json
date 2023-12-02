@@ -2,6 +2,6 @@
   "pylint.cwd": "${fileDirname}",
   "python.terminal.executeInFileDir": true,
   "pylint.args": [
-    "--disable=C0114,C0103,C0411"
+    "--disable=C0114,C0103,C0411,C0301,C0116,C0325"
   ]
 }
