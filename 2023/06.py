@@ -2,8 +2,7 @@
 
 import utils
 
-utils.DEBUG = True
-# utils.DEBUG = False
+# utils.DEBUG = True
 utils.printInfo()
 
 inputLines = utils.fileToLString(utils.inputFilePath()).split('\n')

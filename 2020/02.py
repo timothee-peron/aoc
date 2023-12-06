@@ -2,8 +2,7 @@ import utils
 
 from collections import Counter
 
-utils.DEBUG = True
-utils.DEBUG = False
+# utils.DEBUG = True
 utils.printInfo()
 
 inputLines = utils.linesToItems(utils.fileToLines(utils.inputFilePath()), lambda l: l.split(': '))

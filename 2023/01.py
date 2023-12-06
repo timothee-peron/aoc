@@ -2,8 +2,7 @@ import utils
 
 from sortedcontainers import SortedDict
 
-utils.DEBUG = True
-utils.DEBUG = False
+# utils.DEBUG = True
 utils.printInfo()
 
 inputLines = utils.fileToLines(utils.inputFilePath())

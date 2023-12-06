@@ -5,8 +5,7 @@ import math
 import utils
 import numpy as np
 
-utils.DEBUG = True
-utils.DEBUG = False
+# utils.DEBUG = True
 utils.printInfo()
 
 inputLines = utils.fileToLines(utils.inputFilePath())

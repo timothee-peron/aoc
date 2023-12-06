@@ -1,8 +1,7 @@
 import numpy as np
 import utils
 
-utils.DEBUG = True
-utils.DEBUG = False
+# utils.DEBUG = True
 inputFileFullDir = utils.inputFilePath()
 
 

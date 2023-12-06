@@ -1,8 +1,7 @@
 import utils
 import numpy as np
 
-utils.DEBUG = True
-utils.DEBUG = False
+# utils.DEBUG = True
 
 inputLines = utils.fileToLines(utils.inputFilePath())
 # wholeFile = utils.fileToLString(utils.inputFilePath())

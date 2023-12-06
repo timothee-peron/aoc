@@ -2,8 +2,7 @@ import utils
 
 from functools import reduce
 
-utils.DEBUG = True
-utils.DEBUG = False
+# utils.DEBUG = True
 utils.printInfo()
 
 inputLines = utils.linesToItems(utils.fileToLines(utils.inputFilePath()), list)

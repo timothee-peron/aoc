@@ -2,8 +2,7 @@ import utils
 import json
 from functools import cmp_to_key
 
-utils.DEBUG = True
-utils.DEBUG = False
+# utils.DEBUG = True
 utils.printInfo()
 
 inputLines = utils.fileToLines(utils.inputFilePath())

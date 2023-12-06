@@ -1,8 +1,7 @@
 import utils
 from collections import Counter
 
-utils.DEBUG = True
-utils.DEBUG = False
+# utils.DEBUG = True
 utils.printInfo()
 
 file = utils.fileToLines(utils.inputFilePath())
