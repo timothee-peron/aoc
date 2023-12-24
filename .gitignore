@@ -162,3 +162,8 @@ cython_debug/
 
 # vim
 *.swp
+
+# custom aoc
+
+# for pdf of problems
+Day*.pdf
