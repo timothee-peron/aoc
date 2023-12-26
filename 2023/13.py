@@ -1,6 +1,7 @@
 import utils
 
 # utils.DEBUG = True
+utils.printInfo()
 
 data = utils.fileToLString(utils.inputFilePath()).split('\n\n')
 data = [[list(y) for y in x.strip().split('\n')] for x in data]
