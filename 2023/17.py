@@ -7,7 +7,6 @@ from pqdict import pqdict
 utils.printInfo()
 
 fp = utils.inputFilePath()
-# fp = "inputs/17.txt"
 data = list(map(list, utils.fileToLString(fp).strip().split('\n')))
 data = [[int(y) for y in x] for x in data]
 
@@ -78,28 +77,19 @@ def dijkstra(matrix, source, end, MIN_JUMP, MAX_JUMP):
     
     return (predecessors, distances)
 
+def findEnd(distances):
+    # find node matching end position with minimal distance
+    endNode = None
+    endDist = inf
+    for node, d in distances.items():
+        x, y, _ = node
+        if (x, y) == end:
+            if d < endDist:
+                endNode = node
+                endDist = d
+    return endNode
 
-
-start = (0, 0)
-end = (W -1, H -1)
-MIN_JUMP, MAX_JUMP = 1, 3
-predecessors, distances = dijkstra(data, start, end, MIN_JUMP, MAX_JUMP)
-
-# find node matching end position with minimal distance
-endNode = None
-endDist = inf
-for node, d in distances.items():
-    x, y, _ = node
-    if (x, y) == end:
-        if d < endDist:
-            endNode = node
-            endDist = d
-
-# part 1 (quite slow)
-print(distances[endNode])
-
-if utils.DEBUG:
-    # show path for check
+def makePath(predecessors, distances, endNode):
     path = [endNode]
     while not (path[-1][0] == 0 and path[-1][1] == 0):
         path.append(predecessors[path[-1]])
@@ -107,6 +97,20 @@ if utils.DEBUG:
     path.reverse()
 
     path = [(x, y) for x, y, _ in path]
+    return path
+
+
+start = (0, 0)
+end = (W -1, H -1)
+MIN_JUMP, MAX_JUMP = 1, 3
+predecessors, distances = dijkstra(data, start, end, MIN_JUMP, MAX_JUMP)
+endNode = findEnd(distances)
+
+# part 1
+print(distances[endNode])
+
+if utils.DEBUG:
+    path = makePath(predecessors, distances, endNode)
     printPath(data, path)
     assert distances[endNode] == 102
 else:
