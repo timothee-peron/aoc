@@ -102,11 +102,12 @@ def makePath(predecessors, distances, endNode):
 
 start = (0, 0)
 end = (W -1, H -1)
+
+# part 1
 MIN_JUMP, MAX_JUMP = 1, 3
 predecessors, distances = dijkstra(data, start, end, MIN_JUMP, MAX_JUMP)
 endNode = findEnd(distances)
 
-# part 1
 print(distances[endNode])
 
 if utils.DEBUG:
@@ -115,3 +116,17 @@ if utils.DEBUG:
     assert distances[endNode] == 102
 else:
     assert distances[endNode] == 638
+
+# part 2
+MIN_JUMP, MAX_JUMP = 4, 10
+predecessors, distances = dijkstra(data, start, end, MIN_JUMP, MAX_JUMP)
+endNode = findEnd(distances)
+
+print(distances[endNode])
+
+if utils.DEBUG:
+    path = makePath(predecessors, distances, endNode)
+    printPath(data, path)
+    assert distances[endNode] == 94
+else:
+    assert distances[endNode] == 748
