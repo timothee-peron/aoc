@@ -1,11 +1,13 @@
 import utils
 from collections import defaultdict
 from math import inf
+from pqdict import pqdict
 
 # utils.DEBUG = True
 utils.printInfo()
 
 fp = utils.inputFilePath()
+# fp = "inputs/17.txt"
 data = list(map(list, utils.fileToLString(fp).strip().split('\n')))
 data = [[int(y) for y in x] for x in data]
 
@@ -18,83 +20,77 @@ def printPath(matrix, path):
     for y, row in enumerate(matrix):
         for x, h in enumerate(row):
             if (x, y) in p:
-                print('·', end='')
+                print(' ', end='')
             else:
                 print(str(h), end='')
         print('')
 
-# Dijkstra with 2D array matrix, nodes are 4D (x, y, direction, countstraight)
-# source is 4D, end is 2D
-def dijkstra(matrix, source, end):
+# Dijkstra with 2D array matrix, nodes are 3D (x, y, direction)
+# start, end are 2D
+def dijkstra(matrix, source, end, MIN_JUMP, MAX_JUMP):
+    _sources = [(source[0], source[1], SOUTH), (source[0], source[1], EAST)]
     distances = defaultdict(lambda: inf)
-    distances[source] = 0
+    for _source in _sources:
+        distances[_source] = 0
     predecessors = defaultdict(lambda: None)
 
-    q = [source]
-    q = set(q)
+    q = pqdict.minpq()
+    
+    for _source in _sources:
+        q[_source] = 0
 
     while q:
-
-        # print(len(q))
         # find min distance in q:
-        _min = None
-
-        for node in q:
-            if _min is None or distances[node] < distances[_min]:
-                _min = node
-
-        if _min is None:
-            break
-
-        x, y, d, s = _min
-        q.remove(_min)
-
-        # check if found the end
-        if (x, y) == end:
-            break
+        _min, _ = q.popitem()
+        x, y, d = _min
 
         neighbors = []
-        neighbors.append((x, y-1, NORTH, s + 1 if d == NORTH else 1))
-        neighbors.append((x, y+1, SOUTH, s + 1 if d == SOUTH else 1))
-        neighbors.append((x+1, y, EAST, s + 1 if d == EAST else 1))
-        neighbors.append((x-1, y, WEST, s + 1 if d == WEST else 1))
+        for i in range(MIN_JUMP, MAX_JUMP + 1):
+            neighbors.append((x, y-i, NORTH))
+            neighbors.append((x, y+i, SOUTH))
+            neighbors.append((x+i, y, EAST))
+            neighbors.append((x-i, y, WEST))
 
         for neighbor in neighbors:
-            x, y, d2, s = neighbor
-            if not (0 <= x < W and 0 <= y < H):
+            x2, y2, d2 = neighbor
+            if not (0 <= x2 < W and 0 <= y2 < H):
                 # not in grid
                 continue
-            if s > 3:
-                # more than 3 in straight line
+            if (d - d2) % 2 == 0:
                 continue
-            if not(d2 == d or d2 == (d + 1) % 4 or d2 == (d - 1) % 4):
-                # only 90 deg turn or straight
-                continue
-            else:
-                pass
             
             # total heat loss
-            heatLoss = matrix[y][x] + distances[_min]
+            heatLoss = distances[_min]
+
+            if x == x2:
+                for _y in range(min(y, y2), max(y, y2) + 1):
+                    heatLoss += matrix[_y][x]
+            else:
+                for _x in range(min(x, x2), max(x, x2) + 1):
+                    heatLoss += matrix[y][_x]
+            heatLoss -= matrix[y][x] # because counted twice
+
             if heatLoss < distances[neighbor]:
                 distances[neighbor] = heatLoss
                 predecessors[neighbor] = _min
 
-                q.add(neighbor) # we need to visit neighbor's neighors
+                q[neighbor] = heatLoss # we need to visit neighbor's neighors
     
     return (predecessors, distances)
 
 
 
-
+start = (0, 0)
 end = (W -1, H -1)
-predecessors, distances = dijkstra(data, (0, 0, EAST, 0), end)
+MIN_JUMP, MAX_JUMP = 1, 3
+predecessors, distances = dijkstra(data, start, end, MIN_JUMP, MAX_JUMP)
 
 # find node matching end position with minimal distance
 endNode = None
 endDist = inf
 for node, d in distances.items():
-    x, y, _, s = node
-    if (x, y) == end and s <= 3:
+    x, y, _ = node
+    if (x, y) == end:
         if d < endDist:
             endNode = node
             endDist = d
@@ -110,5 +106,8 @@ if utils.DEBUG:
 
     path.reverse()
 
-    path = [(x, y) for x, y, _, _ in path]
+    path = [(x, y) for x, y, _ in path]
     printPath(data, path)
+    assert distances[endNode] == 102
+else:
+    assert distances[endNode] == 638
