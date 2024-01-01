@@ -14,6 +14,13 @@ dirToVect={
     'L': (-1, 0),
 }
 
+numToDir = {
+    0: 'R',
+    1: 'D',
+    2: 'L',
+    3: 'U',
+}
+
 def addTuples(u, v):
     x1, y1 = u
     x2, y2 = v
@@ -39,7 +46,7 @@ def printSet(s, mark = set()):
             print('x' if (x, y) in mark else '#' if (x, y) in s else '.', end= '')
         print('')
 
-def findInsides(s):
+def countInsides(s):
     topLeft, bottomRight = findSize(s)
     insides = set()
     for y in range(topLeft[1], bottomRight[1] + 1):
@@ -57,37 +64,52 @@ def findInsides(s):
 
 # part 1
 pos = (0, 0)
-digged = set([pos])
+vertices=[pos]
 
-# dig
+# find all vertical dig segments
+boundary = 0
 for direction, n, color in data:
     n = int(n)
-    for i in range(n):
-        pos = addTuples(pos, dirToVect[direction])
-        digged.add(pos)
+    pos = addTuples(pos, scalarTuple(n, dirToVect[direction]))
+    vertices.append(pos)
+    boundary += n
 
-insides = findInsides(digged)
-explore = list(insides)
-# printSet(digged, set([inside]))
+# shoelace
+area = 0
+for i in range(len(vertices)-1):
+    x, y= vertices[i]
+    xx, yy = vertices[i+1]
+    area += -(y+yy)*(x-xx) / 2
 
-# fill
-while explore:
-    (x, y) = explore.pop()
-    insides.add((x, y))
-    
-    candidates = [
-        addTuples((x, y), dirToVect['U']),
-        addTuples((x, y), dirToVect['D']),
-        addTuples((x, y), dirToVect['R']),
-        addTuples((x, y), dirToVect['L']),
-    ]
-
-    for candidate in candidates:
-        if candidate not in insides and candidate not in explore and candidate not in digged:
-            explore.append(candidate)
-
-p1 = len(insides) + len(digged)
+p1 = int(area + boundary/2 + 1)
 print(p1)
 
-if utils.DEBUG:
+if not utils.DEBUG:
     assert(72821 == p1)
+else:
+    assert(62 == p1)
+
+
+# part 2
+pos = (0, 0)
+vertices=[pos]
+
+# find all vertical dig segments
+boundary = 0
+for direction, n, color in data:
+    instruction = color.split('#')[1]
+    n, direction = int('0x'+instruction[0:5], base = 16), instruction[5]
+    direction = numToDir[int(direction)]
+    pos = addTuples(pos, scalarTuple(n, dirToVect[direction]))
+    vertices.append(pos)
+    boundary += n
+
+# shoelace
+area = 0
+for i in range(len(vertices)-1):
+    x, y= vertices[i]
+    xx, yy = vertices[i+1]
+    area += -(y+yy)*(x-xx) / 2
+
+p2 = int(area + boundary/2 + 1)
+print(p2)
