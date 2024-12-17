@@ -73,7 +73,13 @@ def digitsInString(text):
     pattern = r"-?\d+"
     compiledRe = re.compile(pattern)
     results = compiledRe.findall(text)
-    return list(map(int, results))
+    return tuple(map(int, results))
+    
+def numberInString(text):
+    pattern = r"(-?\d+)"
+    compiledRe = re.compile(pattern)
+    results = compiledRe.search(text)
+    return int(results.group(1))
 
 
 def groupListByN(_list, n):
